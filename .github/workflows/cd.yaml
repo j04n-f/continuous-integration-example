@@ -36,26 +36,26 @@ jobs:
             - 'Dockerfile'
             - 'pyproject.toml'
 
-  # bump-and-release:
-  #   name: Bump Version & Release
-  #   needs: [continuous-integration, is-release]
-  #   if: ${{ needs.is-release.outputs.app == 'true' }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v3.5.2
-  #     with:
-  #       fetch-depth: 0
-  #       token: ${{ secrets.GITHUB_TOKEN }}
+  bump-and-release:
+    name: Bump Version & Release
+    needs: [continuous-integration, is-release]
+    if: ${{ needs.is-release.outputs.app == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3.5.2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
 
-  #   - id: cz
-  #     name: Commitizen | Bump
-  #     uses: commitizen-tools/commitizen-action@master
-  #     with:
-  #       push: true
-  #       commit: true
-  #       increment: PATCH
-  #       github_token: ${{ secrets.GITHUB_TOKEN }}
+    - id: cz
+      name: Commitizen | Bump
+      uses: commitizen-tools/commitizen-action@master
+      with:
+        push: true
+        commit: true
+        increment: PATCH
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
   #   - name: Docker | Setup Buildx
   #     uses: docker/setup-buildx-action@v2

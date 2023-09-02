@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "continious-integration-example"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
     'fastapi==0.101.0',
     'uvicorn[standard]==0.23.2'
