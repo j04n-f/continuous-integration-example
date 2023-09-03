@@ -1,0 +1,11 @@
+{{- $username := .Values.ghcr.username -}}
+{{- $password := .Values.ghcr.password -}}
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: {{ printf "{\"auths\": {\"ghcr.io\": {\"auth\": \"%s\"}}}" (printf "%s:%s" $username $password | b64enc) | b64enc }}
+kind: Secret
+metadata:
+  name: {{ include "ci-example.fullname" . }}-container-registry
+type: kubernetes.io/dockerconfigjson
+---

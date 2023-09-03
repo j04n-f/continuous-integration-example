@@ -1,0 +1,87 @@
+---
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+    - main
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  continuous-integration:
+    name: Continuous Integration
+    uses: ./.github/workflows/ci.yaml
+
+  is-release:
+    name: Check Changes. Is Release?
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.changes.outputs.app }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3.5.2
+      with:
+        fetch-depth: 0
+
+    - id: changes
+      name: Check Changes to Release
+      uses: dorny/paths-filter@v2.11.0
+      with:
+        filters: |
+          app:
+            - 'src/**'
+            - 'charts/**'
+            - 'Dockerfile'
+            - 'pyproject.toml'
+
+  bump-and-release:
+    name: Bump Version & Release
+    needs: [continuous-integration, is-release]
+    if: ${{ needs.is-release.outputs.app == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3.5.2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - id: cz
+      name: Commitizen | Bump
+      uses: commitizen-tools/commitizen-action@master
+      with:
+        push: true
+        commit: true
+        increment: PATCH
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  #   - name: Docker | Setup Buildx
+  #     uses: docker/setup-buildx-action@v2
+
+  #   - name: Docker | Login
+  #     uses: docker/login-action@v2
+  #     with:
+  #       registry: ${{ env.REGISTRY }}
+  #       username: ${{ github.actor }}
+  #       password: ${{ secrets.GITHUB_TOKEN }}
+
+  #   - name: Docker | Build & Push
+  #     uses: docker/build-push-action@v4
+  #     with:
+  #       context: .
+  #       push: true
+  #       tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/ci-example:${{ steps.cz.outputs.version }}
+
+  #   - name: Helm | Push Chart
+  #     uses: appany/helm-oci-chart-releaser@v0.4.1
+  #     with:
+  #       name: ci-example
+  #       repository: ${{ github.repository_owner }}/charts
+  #       tag: ${{ steps.cz.outputs.version }}
+  #       path: charts/ci-example
+  #       registry: ${{ env.REGISTRY }}
+  #       registry_username: ${{ github.actor }}
+  #       registry_password: ${{ secrets.GITHUB_TOKEN }}
+  #       update_dependencies: 'true'
