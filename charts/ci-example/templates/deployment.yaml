@@ -20,8 +20,9 @@ spec:
       labels:
         {{- include "ci-example.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
+        - name: {{ include "ci-example.fullname" . }}-container-registry
+      {{- with .Values.imagePullSecrets }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "ci-example.serviceAccountName" . }}
