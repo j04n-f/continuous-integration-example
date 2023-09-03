@@ -1,13 +1,13 @@
 # Continuous Integration Example
 
-This repository contains an example of a continious integration pipeline for a FastAPI application. 
+This repository contains an example of a continious integration pipeline for a FastAPI application.
 
 ## Development
 
 Create a Python virtual environment and install the required dependencies:
 
 ```shell
-$ python3 -m venv venv 
+$ python3 -m venv venv
 $ source venv/bin/activate
 $ pip install -e .[dev]
 $ pre-commit install
@@ -31,7 +31,7 @@ $ docker run --rm -it -p 80:8080 $(docker build -q .)
 
 #### Requirements
 
-- [KinD](https://kind.sigs.k8s.io) 
+- [KinD](https://kind.sigs.k8s.io)
 - [Helm](https://helm.sh)
 - [Docker](https://www.docker.com)
 
