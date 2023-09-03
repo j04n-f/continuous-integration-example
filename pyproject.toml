@@ -24,6 +24,9 @@ test = [
   'python-hosts',
   'kubernetes',
 ]
+dev = [
+  'pre-commit',
+]
 
 [tool.ruff]
 select = [
