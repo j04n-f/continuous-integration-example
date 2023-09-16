@@ -43,12 +43,6 @@ $ python -m scripts.start
 
 Go to: **ci-example.local**
 
-### Python
-
-```shell
-$ python -m src.main
-```
-
 ## Test
 
 Install dependencies;
